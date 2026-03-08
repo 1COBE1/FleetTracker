@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:MAUI.ViewModels"
+             xmlns:models="clr-namespace:MAUI.Models"
+             x:Class="MAUI.Views.StartTripPage"
+             x:DataType="vm:StartTripViewModel"
+             Title="Start Trip">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="16" Spacing="16">
+
+            <!-- Vehicle -->
+            <Label Text="Vehicle" FontAttributes="Bold"/>
+            <Picker ItemsSource="{Binding Vehicles}"
+                    SelectedItem="{Binding SelectedVehicle}"
+                    ItemDisplayBinding="{Binding VehicleName}"
+                    Title="Select a vehicle"/>
+
+            <!-- Driver -->
+            <Label Text="Driver Name" FontAttributes="Bold"/>
+            <Entry Placeholder="Enter driver name"
+                   Text="{Binding DriverName}"/>
+
+            <!-- Stop input -->
+            <Label Text="Stops" FontAttributes="Bold"/>
+            <Grid ColumnDefinitions="*, Auto" ColumnSpacing="8">
+                <Entry Grid.Column="0"
+                       Placeholder="Stop name (e.g. Warehouse A)"
+                       Text="{Binding NewStopName}"/>
+                <Button Grid.Column="1"
+                        Text="Pick on Map"
+                        Command="{Binding PickStopLocationCommand}"/>
+            </Grid>
+
+            <!-- Added stops list -->
+            <CollectionView ItemsSource="{Binding Stops}">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="models:StopInputModel">
+                        <Border Margin="0,4" Padding="12" StrokeShape="RoundRectangle 8">
+                            <Grid ColumnDefinitions="*, Auto">
+                                <VerticalStackLayout Grid.Column="0" Spacing="2">
+                                    <Label Text="{Binding Name}" FontAttributes="Bold"/>
+                                    <Label Text="{Binding Address}" FontSize="12" TextColor="Gray"/>
+                                </VerticalStackLayout>
+                                <Button Grid.Column="1"
+                                        Text="✕"
+                                        CommandParameter="{Binding .}"
+                                        Command="{Binding Source={RelativeSource AncestorType={x:Type vm:StartTripViewModel}}, Path=RemoveStopCommand}"/>
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+            <Button Text="Start Trip"
+                    Command="{Binding StartTripCommand}"/>
+
+            <ActivityIndicator IsRunning="{Binding IsLoading}"
+                               IsVisible="{Binding IsLoading}"
+                               HorizontalOptions="Center"/>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

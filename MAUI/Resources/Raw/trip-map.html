@@ -1,0 +1,116 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+        #map {
+            width: 100vw;
+            height: 100vh;
+        }
+    </style>
+</head>
+<body>
+    <div id="map"></div>
+    <script>
+        var map = L.map('map').setView([41.9981, 21.4254], 13);
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors'
+        }).addTo(map);
+
+        var vehicleMarker = null;
+        var stopMarkers = {};
+        var routeLine = null;
+        var routePoints = [];
+
+        // Vehicle icon — blue dot
+        var vehicleIcon = L.divIcon({
+            className: '',
+            html: '<div style="background:#2196F3;width:16px;height:16px;border-radius:50%;border:3px solid white;box-shadow:0 0 6px rgba(0,0,0,0.5)"></div>',
+            iconSize: [16, 16],
+            iconAnchor: [8, 8]
+        });
+
+        function stopIcon(status) {
+            var color = status === 'Completed' ? '#4CAF50'
+                : status === 'Active' ? '#FF9800'
+                    : '#9E9E9E';
+            return L.divIcon({
+                className: '',
+                html: '<div style="background:' + color + ';width:14px;height:14px;border-radius:50%;border:2px solid white;box-shadow:0 0 4px rgba(0,0,0,0.4)"></div>',
+                iconSize: [14, 14],
+                iconAnchor: [7, 7]
+            });
+        }
+
+        // Called from C# to add or update a stop marker
+        function addStop(stopId, lat, lng, name, status) {
+            if (stopMarkers[stopId]) {
+                stopMarkers[stopId].setIcon(stopIcon(status));
+                stopMarkers[stopId].setTooltipContent(name + '<br>' + status);
+            } else {
+                var marker = L.marker([lat, lng], { icon: stopIcon(status) })
+                    .bindTooltip(name + '<br>' + status, { permanent: true, direction: 'top', offset: [0, -10] })
+                    .addTo(map);
+                stopMarkers[stopId] = marker;
+            }
+            updateRouteLine();
+        }
+
+        // Called from C# on every location update
+        function updateVehicle(lat, lng) {
+            if (vehicleMarker) {
+                vehicleMarker.setLatLng([lat, lng]);
+            } else {
+                vehicleMarker = L.marker([lat, lng], { icon: vehicleIcon })
+                    .bindTooltip('Vehicle', { permanent: false })
+                    .addTo(map);
+            }
+            routePoints.push([lat, lng]);
+            updateRouteLine();
+            map.panTo([lat, lng]);
+        }
+
+        // Update stop marker status (called on StopApproaching / StopCompleted)
+        function updateStopStatus(stopId, status) {
+            if (stopMarkers[stopId]) {
+                stopMarkers[stopId].setIcon(stopIcon(status));
+                var tooltip = stopMarkers[stopId].getTooltip();
+                if (tooltip) {
+                    var parts = tooltip.getContent().split('<br>');
+                    stopMarkers[stopId].setTooltipContent(parts[0] + '<br>' + status);
+                }
+            }
+        }
+
+        // Draws a polyline from vehicle start through all stops
+        function updateRouteLine() {
+            var points = routePoints.concat(
+                Object.values(stopMarkers).map(m => [m.getLatLng().lat, m.getLatLng().lng])
+            );
+            if (routeLine) {
+                routeLine.setLatLngs(routePoints);
+            } else if (routePoints.length > 1) {
+                routeLine = L.polyline(routePoints, { color: '#2196F3', weight: 3, opacity: 0.7 }).addTo(map);
+            }
+        }
+
+        // Fit map to show all stops
+        function fitToStops() {
+            var allMarkers = Object.values(stopMarkers);
+            if (vehicleMarker) allMarkers.push(vehicleMarker);
+            if (allMarkers.length === 0) return;
+            var group = L.featureGroup(allMarkers);
+            map.fitBounds(group.getBounds().pad(0.2));
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:MAUI.ViewModels"
+             xmlns:models="clr-namespace:MAUI.Models"
+             x:Class="MAUI.Views.TripListPage"
+             x:DataType="vm:TripListViewModel"
+             Title="Active Trips">
+
+    <Grid RowDefinitions="*, Auto">
+
+        <CollectionView Grid.Row="0"
+                        ItemsSource="{Binding ActiveTrips}"
+                        SelectionMode="Single"
+                        SelectionChanged="OnTripSelected">
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="models:TripModel">
+                    <Border Margin="12,6" Padding="12" StrokeShape="RoundRectangle 8">
+                        <Grid ColumnDefinitions="*, Auto">
+                            <VerticalStackLayout Grid.Column="0" Spacing="4">
+                                <Label Text="{Binding VehicleName}" FontAttributes="Bold" FontSize="16"/>
+                                <Label Text="{Binding DriverName}" FontSize="13" TextColor="Gray"/>
+                                <Label Text="{Binding Status}" FontSize="13"/>
+                            </VerticalStackLayout>
+                            <VerticalStackLayout Grid.Column="1" HorizontalOptions="End" Spacing="4">
+                                <Label Text="{Binding CurrentSpeed, StringFormat='{0:F1} km/h'}" FontSize="13"/>
+                                <Label Text="{Binding AlertsCount, StringFormat='{0} alerts'}" TextColor="Red" FontSize="13"/>
+                            </VerticalStackLayout>
+                        </Grid>
+                    </Border>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+        <ActivityIndicator Grid.Row="0"
+                           IsRunning="{Binding IsLoading}"
+                           IsVisible="{Binding IsLoading}"
+                           HorizontalOptions="Center"
+                           VerticalOptions="Center"/>
+    </Grid>
+</ContentPage>

@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:MAUI.ViewModels"
+             xmlns:models="clr-namespace:MAUI.Models"
+             x:Class="MAUI.Views.TripDetailsPage"
+             x:DataType="vm:TripDetailsViewModel"
+             Title="Trip Details">
+
+    <Grid RowDefinitions="300, *">
+
+        <!-- Trip Map -->
+        <WebView x:Name="TripMapWebView"
+                 Grid.Row="0"
+                 Source="trip-map.html"/>
+
+        <!-- Scrollable details below map -->
+        <ScrollView Grid.Row="1">
+            <VerticalStackLayout Padding="12" Spacing="16">
+
+                <!-- Trip Summary -->
+                <Border Padding="12" StrokeShape="RoundRectangle 8">
+                    <VerticalStackLayout Spacing="6">
+                        <Label Text="{Binding Trip.VehicleName}" FontSize="20" FontAttributes="Bold"/>
+                        <Label Text="{Binding Trip.DriverName}" TextColor="Gray"/>
+                        <Label Text="{Binding Trip.Status}"/>
+                        <Label Text="{Binding Trip.DistanceTraveled, StringFormat='Distance: {0:F1} km'}"/>
+                        <Label Text="{Binding Trip.CurrentSpeed, StringFormat='Speed: {0:F1} km/h'}"/>
+                        <Label Text="{Binding Trip.StopsCompleted, StringFormat='Stops: {0}'}"/>
+                        <Label Text="{Binding Trip.EstimatedArrival, StringFormat='ETA: {0:HH:mm}'}"/>
+                        <Button Text="End Trip"
+                                Command="{Binding EndTripCommand}"
+                                BackgroundColor="Red"
+                                TextColor="White">
+                            <Button.Triggers>
+                                <DataTrigger TargetType="Button" Binding="{Binding Trip.Status}" Value="Completed">
+                                    <Setter Property="IsVisible" Value="False"/>
+                                </DataTrigger>
+                            </Button.Triggers>
+                        </Button>
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- Stops -->
+                <Label Text="Stops" FontSize="16" FontAttributes="Bold"/>
+                <CollectionView ItemsSource="{Binding Stops}">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="models:TripStopModel">
+                            <Border Margin="0,4" Padding="12" StrokeShape="RoundRectangle 8">
+                                <Border.Triggers>
+                                    <DataTrigger TargetType="Border" Binding="{Binding Status}" Value="Active">
+                                        <Setter Property="Stroke" Value="Orange"/>
+                                        <Setter Property="BackgroundColor" Value="#FFF8F0"/>
+                                    </DataTrigger>
+                                    <DataTrigger TargetType="Border" Binding="{Binding Status}" Value="Completed">
+                                        <Setter Property="Stroke" Value="Green"/>
+                                        <Setter Property="BackgroundColor" Value="#F0FFF4"/>
+                                    </DataTrigger>
+                                </Border.Triggers>
+                                <Grid ColumnDefinitions="Auto, *">
+                                    <Label Grid.Column="0"
+                                           Text="{Binding SequenceNumber}"
+                                           FontAttributes="Bold"
+                                           WidthRequest="30"/>
+                                    <VerticalStackLayout Grid.Column="1" Spacing="2">
+                                        <Label Text="{Binding Name}" FontAttributes="Bold"/>
+                                        <Label Text="{Binding Address}" TextColor="Gray" FontSize="12"/>
+                                        <Label Text="{Binding Status}" FontSize="12">
+                                            <Label.Triggers>
+                                                <DataTrigger TargetType="Label" Binding="{Binding Status}" Value="Pending">
+                                                    <Setter Property="TextColor" Value="Gray"/>
+                                                </DataTrigger>
+                                                <DataTrigger TargetType="Label" Binding="{Binding Status}" Value="Active">
+                                                    <Setter Property="TextColor" Value="Orange"/>
+                                                </DataTrigger>
+                                                <DataTrigger TargetType="Label" Binding="{Binding Status}" Value="Completed">
+                                                    <Setter Property="TextColor" Value="Green"/>
+                                                </DataTrigger>
+                                            </Label.Triggers>
+                                        </Label>
+                                        <Label Text="{Binding EstimatedArrival, StringFormat='ETA: {0:HH:mm}'}"
+                                               FontSize="12" TextColor="Gray" IsVisible="True">
+                                            <Label.Triggers>
+                                                <DataTrigger TargetType="Label" Binding="{Binding Status}" Value="Completed">
+                                                    <Setter Property="IsVisible" Value="False"/>
+                                                </DataTrigger>
+                                            </Label.Triggers>
+                                        </Label>
+                                        <Label Text="{Binding ActualArrival, StringFormat='Arrived: {0:HH:mm}'}"
+                                               FontSize="12" TextColor="Green" IsVisible="False">
+                                            <Label.Triggers>
+                                                <DataTrigger TargetType="Label" Binding="{Binding Status}" Value="Completed">
+                                                    <Setter Property="IsVisible" Value="True"/>
+                                                </DataTrigger>
+                                            </Label.Triggers>
+                                        </Label>
+                                    </VerticalStackLayout>
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+
+                <!-- Alerts -->
+                <Label Text="Safety Alerts" FontSize="16" FontAttributes="Bold"/>
+                <CollectionView ItemsSource="{Binding Alerts}">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="models:SafetyAlertModel">
+                            <Border Margin="0,4" Padding="12" StrokeShape="RoundRectangle 8" Stroke="Red">
+                                <VerticalStackLayout Spacing="2">
+                                    <Label Text="{Binding AlertType}" FontAttributes="Bold" TextColor="Red"/>
+                                    <Label Text="{Binding OccurredAt, StringFormat='{0:HH:mm:ss}'}" FontSize="12" TextColor="Gray"/>
+                                    <Label Text="{Binding DecelerationG, StringFormat='{0:F2}G'}" FontSize="12"/>
+                                </VerticalStackLayout>
+                            </Border>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+
+            </VerticalStackLayout>
+        </ScrollView>
+
+    </Grid>
+</ContentPage>

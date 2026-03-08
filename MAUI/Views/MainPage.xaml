@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:MAUI.ViewModels"
+             x:Class="MAUI.Views.MainPage"
+             x:DataType="vm:FleetMapViewModel"
+             Title="Fleet Map">
+
+    <Grid RowDefinitions="Auto, *">
+
+        <HorizontalStackLayout Grid.Row="0" Padding="12" Spacing="12">
+            <Label Text="Fleet Tracker" FontSize="20" FontAttributes="Bold" VerticalOptions="Center"/>
+            <Button Text="Trips"
+                    Command="{Binding NavigateToTripsCommand}"
+                    HorizontalOptions="End"/>
+        </HorizontalStackLayout>
+
+        <WebView x:Name="FleetMapWebView"
+                 Grid.Row="1"
+                 Source="map.html"/>
+
+        <ActivityIndicator Grid.Row="1"
+                           IsRunning="{Binding IsLoading}"
+                           IsVisible="{Binding IsLoading}"
+                           HorizontalOptions="Center"
+                           VerticalOptions="Center"/>
+    </Grid>
+</ContentPage>

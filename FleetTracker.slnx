@@ -1,0 +1,7 @@
+<Solution>
+  <Project Path="API/API.csproj" />
+  <Project Path="FleetTracker.Domain/FleetTracker.Domain.csproj" />
+  <Project Path="Infrastructure/Infrastructure.csproj" />
+  <Project Path="MAUI/MAUI.csproj" />
+  <Project Path="Simulator/Simulator.csproj" />
+</Solution>

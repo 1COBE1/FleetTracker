@@ -1,0 +1,53 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fleet Map</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <style>
+        html, body, #map {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+    </style>
+</head>
+<body>
+    <div id="map"></div>
+    <script>
+        var map = L.map('map').setView([41.9981, 21.4254], 12); // Default: Skopje
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors'
+        }).addTo(map);
+
+        var vehicles = {};
+
+        function updateVehicle(id, lat, lng, name, speed) {
+            if (vehicles[id]) {
+                vehicles[id].marker.setLatLng([lat, lng]);
+                vehicles[id].marker.setPopupContent(
+                    '<b>' + name + '</b><br>Speed: ' + speed.toFixed(1) + ' km/h'
+                );
+            } else {
+                var marker = L.marker([lat, lng]).addTo(map);
+                marker.bindPopup('<b>' + name + '</b><br>Speed: ' + speed.toFixed(1) + ' km/h');
+                vehicles[id] = { marker: marker };
+            }
+        }
+
+        function removeVehicle(id) {
+            if (vehicles[id]) {
+                map.removeLayer(vehicles[id].marker);
+                delete vehicles[id];
+            }
+        }
+
+        function centerMap(lat, lng) {
+            map.setView([lat, lng], 14);
+        }
+    </script>
+</body>
+</html>

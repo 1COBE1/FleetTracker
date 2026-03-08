@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:MAUI.ViewModels"
+             x:Class="MAUI.Views.RegisterVehiclePage"
+             x:DataType="vm:RegisterVehicleViewModel"
+             Title="Register Vehicle">
+
+    <VerticalStackLayout Padding="16" Spacing="16">
+
+        <Label Text="License Plate" FontAttributes="Bold"/>
+        <Entry Placeholder="e.g. SK-123-AB"
+               Text="{Binding LicensePlate}"/>
+
+        <Label Text="Model" FontAttributes="Bold"/>
+        <Entry Placeholder="e.g. Ford Transit"
+               Text="{Binding Model}"/>
+
+        <Button Text="Register Vehicle"
+                Command="{Binding RegisterCommand}"/>
+
+        <ActivityIndicator IsRunning="{Binding IsLoading}"
+                           IsVisible="{Binding IsLoading}"
+                           HorizontalOptions="Center"/>
+
+    </VerticalStackLayout>
+</ContentPage>

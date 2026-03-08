@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:MAUI.ViewModels"
+             x:Class="MAUI.Views.SimulatorPage"
+             x:DataType="vm:SimulatorViewModel"
+             Title="Simulator">
+
+    <Grid RowDefinitions="250, *">
+
+        <WebView x:Name="SimMapWebView"
+                 Grid.Row="0"
+                 Source="map.html"/>
+
+        <ScrollView Grid.Row="1">
+            <VerticalStackLayout Padding="16" Spacing="16">
+
+                <Label Text="Active Trip" FontAttributes="Bold"/>
+                <Picker ItemsSource="{Binding ActiveTrips}"
+                        SelectedItem="{Binding SelectedTrip}"
+                        ItemDisplayBinding="{Binding VehicleName}"
+                        Title="Select a trip"/>
+
+                <Button Text="Load Stops"
+                        Command="{Binding InitializeCommand}"
+                        IsEnabled="{Binding IsNotRunning}"/>
+
+                <Label Text="{Binding SpeedMultiplier, StringFormat='Speed Multiplier: {0}x'}"
+                       FontAttributes="Bold"/>
+                <Slider Minimum="1" Maximum="20"
+                        Value="{Binding SpeedMultiplier}"
+                        IsEnabled="{Binding IsNotRunning}"/>
+
+                <Border Padding="12" StrokeShape="RoundRectangle 8" BackgroundColor="#F5F5F5">
+                    <VerticalStackLayout Spacing="6">
+                        <Label Text="{Binding StatusText}" FontAttributes="Bold"/>
+                        <Label Text="{Binding CurrentLatitude,  StringFormat='Lat: {0:F6}'}" FontSize="12" TextColor="Gray"/>
+                        <Label Text="{Binding CurrentLongitude, StringFormat='Lng: {0:F6}'}" FontSize="12" TextColor="Gray"/>
+                        <ProgressBar Progress="{Binding WaypointRatio}"/>
+
+                        <Label Text="{Binding WaypointProgress, StringFormat='{0} waypoints sent'}"
+                               FontSize="12" TextColor="Gray"/>
+                    </VerticalStackLayout>
+                </Border>
+
+                <Grid ColumnDefinitions="*, *, *" ColumnSpacing="8">
+                    <Button Grid.Column="0"
+                            Text="▶ Start"
+                            Command="{Binding StartCommand}"
+                            IsEnabled="{Binding IsNotRunning}"
+                            BackgroundColor="Green"
+                            TextColor="White"/>
+                    <Button Grid.Column="1"
+                            Text="⏹ Stop"
+                            Command="{Binding StopCommand}"
+                            IsEnabled="{Binding IsRunning}"
+                            BackgroundColor="Red"
+                            TextColor="White"/>
+                    <Button Grid.Column="2"
+                            Text="↺ Reset"
+                            Command="{Binding ResetCommand}"
+                            IsEnabled="{Binding IsNotRunning}"/>
+                </Grid>
+
+                <ActivityIndicator IsRunning="{Binding IsLoading}"
+                                   IsVisible="{Binding IsLoading}"
+                                   HorizontalOptions="Center"/>
+
+            </VerticalStackLayout>
+        </ScrollView>
+
+    </Grid>
+</ContentPage>
