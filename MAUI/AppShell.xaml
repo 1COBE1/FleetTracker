@@ -2,9 +2,14 @@
 <Shell xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
        xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
        xmlns:views="clr-namespace:MAUI.Views"
-       x:Class="MAUI.AppShell">
+       x:Class="MAUI.AppShell"
+       FlyoutBehavior="Flyout">
 
-    <TabBar>
+    <!-- Home: one flyout row; multiple ShellContent children become bottom tabs automatically -->
+    <FlyoutItem Title="Home"
+                Route="home"
+                Icon="map.png"
+                FlyoutDisplayOptions="AsSingleItem">
         <ShellContent Title="Map"
                       Icon="map.png"
                       ContentTemplate="{DataTemplate views:MainPage}"
@@ -19,17 +24,31 @@
                       Icon="starttrip.png"
                       ContentTemplate="{DataTemplate views:StartTripPage}"
                       Route="starttrip" />
+    </FlyoutItem>
 
+    <!-- Secondary: fleet admin & tools (flyout / hamburger) -->
+    <FlyoutItem Title="History"
+                Icon="history.png"
+                FlyoutDisplayOptions="AsSingleItem">
+        <ShellContent Title="History"
+                      ContentTemplate="{DataTemplate views:TripHistoryPage}"
+                      Route="history" />
+    </FlyoutItem>
+
+    <FlyoutItem Title="Vehicles"
+                Icon="vehicle.png"
+                FlyoutDisplayOptions="AsSingleItem">
         <ShellContent Title="Vehicles"
-                      Icon="vehicle.png"
                       ContentTemplate="{DataTemplate views:RegisterVehiclePage}"
                       Route="registervehicle" />
+    </FlyoutItem>
 
+    <FlyoutItem Title="Simulator"
+                Icon="simulator.png"
+                FlyoutDisplayOptions="AsSingleItem">
         <ShellContent Title="Simulator"
-              Icon="simulator.png"
-              ContentTemplate="{DataTemplate views:SimulatorPage}"
-              Route="simulator"/>
-
-    </TabBar>
+                      ContentTemplate="{DataTemplate views:SimulatorPage}"
+                      Route="simulator" />
+    </FlyoutItem>
 
 </Shell>

@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:MAUI.ViewModels"
+             xmlns:models="clr-namespace:MAUI.Models"
+             x:Class="MAUI.Views.TripHistoryPage"
+             x:DataType="vm:TripHistoryViewModel"
+             Title="Trip History">
+
+    <Grid RowDefinitions="*, Auto">
+
+        <CollectionView Grid.Row="0"
+                        ItemsSource="{Binding CompletedTrips}"
+                        x:Name="TripList">
+            <CollectionView.EmptyView>
+                <VerticalStackLayout HorizontalOptions="Center" VerticalOptions="Center" Spacing="8">
+                    <Label Text="No completed trips yet"
+                           FontSize="16"
+                           TextColor="Gray"
+                           HorizontalOptions="Center"/>
+                </VerticalStackLayout>
+            </CollectionView.EmptyView>
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="models:TripModel">
+                    <Border Margin="12,6" Padding="12" StrokeShape="RoundRectangle 8">
+                        <Grid ColumnDefinitions="*, Auto" RowDefinitions="Auto, Auto, Auto">
+
+                            <!-- Vehicle + driver -->
+                            <Label Grid.Row="0" Grid.Column="0"
+                                   Text="{Binding VehicleName}"
+                                   FontAttributes="Bold"
+                                   FontSize="16"/>
+                            <Label Grid.Row="1" Grid.Column="0"
+                                   Text="{Binding DriverName}"
+                                   FontSize="13"
+                                   TextColor="Gray"/>
+
+                            <!-- Stats -->
+                            <VerticalStackLayout Grid.Row="0" Grid.Column="1"
+                                                 Grid.RowSpan="2"
+                                                 HorizontalOptions="End"
+                                                 Spacing="2">
+                                <Label Text="{Binding DistanceTraveled, StringFormat='{0:F1} km'}"
+                                       FontSize="13"
+                                       HorizontalOptions="End"/>
+                                <Label Text="{Binding StopsCompleted, StringFormat='{0} stops'}"
+                                       FontSize="12"
+                                       TextColor="Gray"
+                                       HorizontalOptions="End"/>
+                                <Label Text="{Binding AlertsCount, StringFormat='{0} alerts'}"
+                                       FontSize="12"
+                                       TextColor="Red"
+                                       HorizontalOptions="End"/>
+                            </VerticalStackLayout>
+
+                            <!-- Date + Replay button -->
+                            <Grid Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2"
+                                  ColumnDefinitions="*, Auto"
+                                  Margin="0,8,0,0">
+                                <Label Grid.Column="0"
+                                       Text="{Binding EndedAt, StringFormat='{0:MMM dd, yyyy  HH:mm}'}"
+                                       FontSize="12"
+                                       TextColor="Gray"
+                                       VerticalOptions="Center"/>
+                                <Button Grid.Column="1"
+                                        Text="▶  Replay"
+                                        BackgroundColor="#2196F3"
+                                        TextColor="White"
+                                        FontSize="13"
+                                        HeightRequest="36"
+                                        Padding="12,0"
+                                        CornerRadius="18"
+                                        CommandParameter="{Binding TripId}"
+                                        Clicked="OnReplayClicked"/>
+                            </Grid>
+
+                        </Grid>
+                    </Border>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+        <ActivityIndicator Grid.Row="0"
+                           IsRunning="{Binding IsLoading}"
+                           IsVisible="{Binding IsLoading}"
+                           HorizontalOptions="Center"
+                           VerticalOptions="Center"/>
+
+    </Grid>
+</ContentPage>

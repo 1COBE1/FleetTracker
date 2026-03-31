@@ -1,4 +1,4 @@
-﻿using Dapper;
+using Dapper;
 using Microsoft.Data.SqlClient;
 using FleetTracker.Domain.Events;
 
@@ -156,6 +156,18 @@ public class TripRepository
             FROM TripStatusView
             WHERE Status = 'InProgress'
             ORDER BY StartedAt DESC");
+    }
+
+    public async Task<IEnumerable<dynamic>> GetCompletedTripsAsync()
+    {
+        using var connection = new SqlConnection(_connectionString);
+        return await connection.QueryAsync(@"
+            SELECT TripId, VehicleId, VehicleName, DriverName,
+                   Status, StartedAt, EndedAt,
+                   DistanceTraveled, StopsTotal, StopsCompleted, AlertsCount
+            FROM TripStatusView
+            WHERE Status = 'Completed'
+            ORDER BY EndedAt DESC");
     }
 
     public async Task<IEnumerable<dynamic>> GetStopsByTripIdAsync(Guid tripId)

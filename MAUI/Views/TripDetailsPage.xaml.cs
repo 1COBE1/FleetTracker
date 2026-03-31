@@ -73,4 +73,10 @@ public partial class TripDetailsPage : ContentPage, IQueryAttributable
         var js = $"addStop('{stop.StopId}', {lat}, {lng}, '{name}', '{stop.Status}');";
         TripMapWebView.EvaluateJavaScriptAsync(js);
     }
+
+    private async void OnReplayClicked(object sender, EventArgs e)
+    {
+        if (_vm.Trip is null) return;
+        await Shell.Current.GoToAsync($"tripreplay?tripId={_vm.Trip.TripId}");
+    }
 }

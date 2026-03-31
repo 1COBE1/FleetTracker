@@ -1,4 +1,4 @@
-﻿using CommunityToolkit.Maui;
+using CommunityToolkit.Maui;
 using MAUI.Services;
 using MAUI.ViewModels;
 using MAUI.Views;
@@ -42,11 +42,15 @@ public static class MauiProgram
         builder.Services.AddTransient<FleetMapViewModel>();
         builder.Services.AddTransient<TripListViewModel>();
         builder.Services.AddTransient<TripDetailsViewModel>();
+        builder.Services.AddTransient<TripHistoryViewModel>();
+        builder.Services.AddTransient<TripReplayViewModel>();
 
         // Pages (Transient - new instance per navigation)
         builder.Services.AddTransient<Views.MainPage>();
         builder.Services.AddTransient<TripListPage>();
         builder.Services.AddTransient<TripDetailsPage>();
+        builder.Services.AddTransient<TripHistoryPage>();
+        builder.Services.AddTransient<TripReplayPage>();
 
         builder.Services.AddSingleton<StopPickerService>();
 

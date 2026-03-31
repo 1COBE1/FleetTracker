@@ -1,4 +1,4 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using MAUI.Models;
 using MAUI.Services;
@@ -6,7 +6,7 @@ using System.Collections.ObjectModel;
 
 namespace MAUI.ViewModels;
 
-public partial class FleetMapViewModel : ObservableObject
+public partial class FleetMapViewModel : ObservableObject, IDisposable
 {
     private readonly VehicleService _vehicleService;
     private readonly FleetSignalRService _signalR;
@@ -45,7 +45,8 @@ public partial class FleetMapViewModel : ObservableObject
     [RelayCommand]
     private async Task NavigateToTripsAsync()
     {
-        await Shell.Current.GoToAsync("//trips");
+        // Shell route: FlyoutItem "home" > TabBar > ShellContent "trips"
+        await Shell.Current.GoToAsync("//home/trips");
     }
 
     private void OnLocationUpdated(LocationUpdateModel update)
@@ -60,5 +61,10 @@ public partial class FleetMapViewModel : ObservableObject
             vehicle.Speed = update.Speed;
             OnVehicleUpdated?.Invoke(vehicle);
         });
+    }
+
+    public void Dispose()
+    {
+        _signalR.OnLocationUpdated -= OnLocationUpdated;
     }
 }

@@ -6,7 +6,7 @@ using System.Collections.ObjectModel;
 
 namespace MAUI.ViewModels;
 
-public partial class TripListViewModel : ObservableObject
+public partial class TripListViewModel : ObservableObject, IDisposable
 {
     private readonly TripService _tripService;
     private readonly FleetSignalRService _signalR;
@@ -56,5 +56,9 @@ public partial class TripListViewModel : ObservableObject
                 ActiveTrips.Add(trip);
             }
         });
+    }
+    public void Dispose()
+    {
+        _signalR.OnTripStatusChanged -= OnTripStatusChanged;
     }
 }

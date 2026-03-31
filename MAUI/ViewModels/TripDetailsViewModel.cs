@@ -6,7 +6,7 @@ using System.Collections.ObjectModel;
 
 namespace MAUI.ViewModels;
 
-public partial class TripDetailsViewModel : ObservableObject
+public partial class TripDetailsViewModel : ObservableObject, IDisposable
 {
     private readonly TripService _tripService;
     private readonly AlertService _alertService;
@@ -153,5 +153,14 @@ public partial class TripDetailsViewModel : ObservableObject
 
             Trip = await _tripService.GetByIdAsync(model.TripId);
         });
+    }
+
+    public void Dispose()
+    {
+        _signalR.OnSafetyAlert -= OnSafetyAlert;
+        _signalR.OnTripStatusChanged -= OnTripStatusChanged;
+        _signalR.OnStopApproaching -= OnStopApproaching;
+        _signalR.OnStopCompleted -= OnStopCompleted;
+        _signalR.OnLocationUpdated -= OnLocationUpdated;
     }
 }

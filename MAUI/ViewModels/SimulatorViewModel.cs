@@ -6,7 +6,7 @@ using System.Collections.ObjectModel;
 
 namespace MAUI.ViewModels;
 
-public partial class SimulatorViewModel : ObservableObject
+public partial class SimulatorViewModel : ObservableObject, IDisposable
 {
     private readonly TripService _tripService;
     private readonly SimulatorService _simulatorService;
@@ -177,5 +177,10 @@ public partial class SimulatorViewModel : ObservableObject
             IsRunning = false;
             StatusText = "✅ Simulation complete — all stops visited";
         });
+    }
+    public void Dispose()
+    {
+        _simulatorService.OnPositionChanged -= OnSimulatorPositionChanged;
+        _simulatorService.OnSimulationCompleted -= OnSimulationCompleted;
     }
 }

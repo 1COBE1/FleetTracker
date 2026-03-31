@@ -38,6 +38,10 @@
                                 </DataTrigger>
                             </Button.Triggers>
                         </Button>
+                        <Button Text="▶  Replay Trip"
+                                Clicked="OnReplayClicked"
+                                BackgroundColor="#2196F3"
+                                TextColor="White"/>
                     </VerticalStackLayout>
                 </Border>
 

@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using FleetTracker.API.Services;
 using FleetTracker.Domain.Events;
 
@@ -19,6 +19,13 @@ public class TripsController : ControllerBase
     public async Task<IActionResult> GetActiveTrips()
     {
         var trips = await _tripService.GetActiveTripsAsync();
+        return Ok(trips);
+    }
+
+    [HttpGet("completed")]
+    public async Task<IActionResult> GetCompletedTrips()
+    {
+        var trips = await _tripService.GetCompletedTripsAsync();
         return Ok(trips);
     }
 
@@ -71,6 +78,14 @@ public class TripsController : ControllerBase
     {
         await _tripService.EndTripAsync(tripId);
         return Ok();
+    }
+
+    [HttpGet("{tripId}/replay")]
+    public async Task<IActionResult> GetReplay(Guid tripId)
+    {
+        var replay = await _tripService.GetTripReplayAsync(tripId);
+        if (replay == null) return NotFound();
+        return Ok(replay);
     }
 }
 

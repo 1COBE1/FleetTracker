@@ -1,4 +1,4 @@
-﻿using System.Net.Http.Json;
+using System.Net.Http.Json;
 using MAUI.Models;
 
 namespace MAUI.Services;
@@ -55,6 +55,17 @@ public class TripService
     {
         var response = await _http.PostAsync($"/api/trips/{tripId}/end", null);
         response.EnsureSuccessStatusCode();
+    }
+
+    public async Task<List<TripModel>> GetCompletedTripsAsync()
+    {
+        return await _http.GetFromJsonAsync<List<TripModel>>("/api/trips/completed")
+               ?? new List<TripModel>();
+    }
+
+    public async Task<TripReplayModel?> GetTripReplayAsync(Guid tripId)
+    {
+        return await _http.GetFromJsonAsync<TripReplayModel>($"/api/trips/{tripId}/replay");
     }
 }
 

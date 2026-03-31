@@ -7,7 +7,7 @@ public record TripStarted(
     string DriverName,
     List<PlannedStop> PlannedStops,
     DateTimeOffset StartedAt
-);
+) : DomainEvent;
 
 public record LocationUpdated(
     Guid TripId,
@@ -16,24 +16,27 @@ public record LocationUpdated(
     double Longitude,
     double Speed,
     double Heading,
+    double DistanceDelta,       // ← NEW: computed before AppendAsync, carried in event
     DateTimeOffset Timestamp
-);
+) : DomainEvent;
 
 public record EtaChanged(
     Guid TripId,
     Guid StopId,
-    DateTime PreviousEta,
-    DateTime NewEta
-);
+    DateTimeOffset PreviousEta,
+    DateTimeOffset NewEta
+) : DomainEvent;
+
 
 public record HarshBrakeReported(
     Guid TripId,
     Guid VehicleId,
+    string VehicleName,         // ← NEW: needed for replay correctness
     double Latitude,
     double Longitude,
     double DecelerationG,
     DateTimeOffset Timestamp
-);
+) : DomainEvent;
 
 public record TripEnded(
     Guid TripId,
@@ -41,7 +44,7 @@ public record TripEnded(
     double TotalDistance,
     int StopsCompleted,
     DateTimeOffset EndedAt
-);
+) : DomainEvent;
 
 public record PlannedStop(
     Guid StopId,
@@ -52,11 +55,10 @@ public record PlannedStop(
     double Longitude
 );
 
-// NEW
 public record StopCompleted(
     Guid TripId,
     Guid StopId,
     int SequenceNumber,
     string StopName,
     DateTimeOffset ArrivedAt
-);
+) : DomainEvent;

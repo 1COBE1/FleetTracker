@@ -19,21 +19,13 @@ public class VehicleService
     {
         var vehicleId = Guid.NewGuid();
 
-        // 1. Append event
-        await _eventStore.AppendAsync(
-            streamId: $"vehicle-{vehicleId}",
-            eventType: nameof(VehicleRegistered),
-            eventData: new VehicleRegistered(vehicleId, licensePlate, model)
-        );
-
-        // 2. Update read model
-        await _vehicleRepository.InsertVehicleAsync(vehicleId, licensePlate);
+        // Persist → ReadModelHandler: InsertVehicleAsync
+        await _eventStore.AppendAsync($"vehicle-{vehicleId}",
+            new VehicleRegistered(vehicleId, licensePlate, model));
 
         return vehicleId;
     }
 
     public async Task<IEnumerable<dynamic>> GetAllVehiclesAsync()
-    {
-        return await _vehicleRepository.GetAllVehiclesAsync();
-    }
+        => await _vehicleRepository.GetAllVehiclesAsync();
 }

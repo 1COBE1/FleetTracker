@@ -1,5 +1,6 @@
 <Solution>
   <Project Path="API/API.csproj" />
+  <Project Path="Application/Application.csproj" Id="837ed695-e41f-4cc1-a157-94a3dd04f6d0" />
   <Project Path="FleetTracker.Domain/FleetTracker.Domain.csproj" />
   <Project Path="Infrastructure/Infrastructure.csproj" />
   <Project Path="MAUI/MAUI.csproj" />
