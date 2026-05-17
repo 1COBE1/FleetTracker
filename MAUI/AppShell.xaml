@@ -5,12 +5,9 @@
        x:Class="MAUI.AppShell"
        FlyoutBehavior="Flyout">
 
-    <!-- Home: one flyout row; multiple ShellContent children become bottom tabs automatically -->
-    <FlyoutItem Title="Home"
-                Route="home"
-                Icon="map.png"
-                FlyoutDisplayOptions="AsSingleItem">
-        <ShellContent Title="Map"
+    <!-- Core navigation: consistent bottom tabs -->
+    <TabBar Route="core">
+        <ShellContent Title="Live Fleet"
                       Icon="map.png"
                       ContentTemplate="{DataTemplate views:MainPage}"
                       Route="map" />
@@ -20,25 +17,22 @@
                       ContentTemplate="{DataTemplate views:TripListPage}"
                       Route="trips" />
 
-        <ShellContent Title="Start Trip"
+        <ShellContent Title="History"
+                      Icon="history.png"
+                      ContentTemplate="{DataTemplate views:TripHistoryPage}"
+                      Route="history" />
+
+        <ShellContent Title="Start"
                       Icon="starttrip.png"
                       ContentTemplate="{DataTemplate views:StartTripPage}"
                       Route="starttrip" />
-    </FlyoutItem>
+    </TabBar>
 
-    <!-- Secondary: fleet admin & tools (flyout / hamburger) -->
-    <FlyoutItem Title="History"
-                Icon="history.png"
-                FlyoutDisplayOptions="AsSingleItem">
-        <ShellContent Title="History"
-                      ContentTemplate="{DataTemplate views:TripHistoryPage}"
-                      Route="history" />
-    </FlyoutItem>
-
+    <!-- Secondary: admin & tools (flyout / hamburger) -->
     <FlyoutItem Title="Vehicles"
                 Icon="vehicle.png"
                 FlyoutDisplayOptions="AsSingleItem">
-        <ShellContent Title="Vehicles"
+        <ShellContent Title="Register Vehicle"
                       ContentTemplate="{DataTemplate views:RegisterVehiclePage}"
                       Route="registervehicle" />
     </FlyoutItem>

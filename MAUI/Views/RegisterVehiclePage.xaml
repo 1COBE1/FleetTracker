@@ -6,15 +6,19 @@
              x:DataType="vm:RegisterVehicleViewModel"
              Title="Register Vehicle">
 
-    <VerticalStackLayout Padding="16" Spacing="16">
+    <VerticalStackLayout Padding="0,16" Spacing="16">
 
-        <Label Text="License Plate" FontAttributes="Bold"/>
-        <Entry Placeholder="e.g. SK-123-AB"
-               Text="{Binding LicensePlate}"/>
+        <Label Text="License plate" Style="{StaticResource SectionHeaderLabelStyle}" FontSize="14"/>
+        <Border Style="{StaticResource FieldContainerStyle}">
+            <Entry Placeholder="e.g. SK-123-AB"
+                   Text="{Binding LicensePlate}"/>
+        </Border>
 
-        <Label Text="Model" FontAttributes="Bold"/>
-        <Entry Placeholder="e.g. Ford Transit"
-               Text="{Binding Model}"/>
+        <Label Text="Model" Style="{StaticResource SectionHeaderLabelStyle}" FontSize="14"/>
+        <Border Style="{StaticResource FieldContainerStyle}">
+            <Entry Placeholder="e.g. Ford Transit"
+                   Text="{Binding Model}"/>
+        </Border>
 
         <Button Text="Register Vehicle"
                 Command="{Binding RegisterCommand}"/>

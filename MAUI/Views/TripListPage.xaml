@@ -15,17 +15,90 @@
                         SelectionChanged="OnTripSelected">
             <CollectionView.ItemTemplate>
                 <DataTemplate x:DataType="models:TripModel">
-                    <Border Margin="12,6" Padding="12" StrokeShape="RoundRectangle 8">
-                        <Grid ColumnDefinitions="*, Auto">
-                            <VerticalStackLayout Grid.Column="0" Spacing="4">
-                                <Label Text="{Binding VehicleName}" FontAttributes="Bold" FontSize="16"/>
-                                <Label Text="{Binding DriverName}" FontSize="13" TextColor="Gray"/>
-                                <Label Text="{Binding Status}" FontSize="13"/>
+                    <Border Style="{StaticResource CardStyle}" Margin="0,8">
+                        <Grid RowDefinitions="Auto,Auto,Auto" ColumnDefinitions="*,Auto" RowSpacing="8">
+
+                            <!-- Header -->
+                            <VerticalStackLayout Grid.Row="0" Grid.Column="0" Spacing="2">
+                                <Label Text="{Binding VehicleName}"
+                                       Style="{StaticResource CardTitleLabelStyle}"/>
+                                <Label Text="{Binding DriverName}"
+                                       Style="{StaticResource MetaLabelStyle}"/>
                             </VerticalStackLayout>
-                            <VerticalStackLayout Grid.Column="1" HorizontalOptions="End" Spacing="4">
-                                <Label Text="{Binding CurrentSpeed, StringFormat='{0:F1} km/h'}" FontSize="13"/>
-                                <Label Text="{Binding AlertsCount, StringFormat='{0} alerts'}" TextColor="Red" FontSize="13"/>
-                            </VerticalStackLayout>
+
+                            <Border Grid.Row="0" Grid.Column="1"
+                                    Style="{StaticResource StatusPillStyle}"
+                                    HorizontalOptions="End">
+                                <Border.Triggers>
+                                    <DataTrigger TargetType="Border" Binding="{Binding Status}" Value="InProgress">
+                                        <Setter Property="BackgroundColor" Value="{StaticResource InfoBackground}"/>
+                                    </DataTrigger>
+                                    <DataTrigger TargetType="Border" Binding="{Binding Status}" Value="Completed">
+                                        <Setter Property="BackgroundColor" Value="{StaticResource SuccessBackground}"/>
+                                    </DataTrigger>
+                                    <DataTrigger TargetType="Border" Binding="{Binding Status}" Value="Cancelled">
+                                        <Setter Property="BackgroundColor" Value="{StaticResource ErrorBackground}"/>
+                                    </DataTrigger>
+                                </Border.Triggers>
+                                <Label Text="{Binding Status}"
+                                       Style="{StaticResource StatusPillLabelStyle}">
+                                    <Label.Triggers>
+                                        <DataTrigger TargetType="Label" Binding="{Binding Status}" Value="InProgress">
+                                            <Setter Property="TextColor" Value="{StaticResource Info}"/>
+                                        </DataTrigger>
+                                        <DataTrigger TargetType="Label" Binding="{Binding Status}" Value="Completed">
+                                            <Setter Property="TextColor" Value="{StaticResource Success}"/>
+                                        </DataTrigger>
+                                        <DataTrigger TargetType="Label" Binding="{Binding Status}" Value="Cancelled">
+                                            <Setter Property="TextColor" Value="{StaticResource Error}"/>
+                                        </DataTrigger>
+                                    </Label.Triggers>
+                                </Label>
+                            </Border>
+
+                            <!-- Metrics -->
+                            <Grid Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"
+                                  ColumnDefinitions="*,*,*"
+                                  ColumnSpacing="12">
+
+                                <VerticalStackLayout Grid.Column="0" Spacing="2">
+                                    <Label Text="Speed" Style="{StaticResource MetaLabelStyle}"/>
+                                    <Label Text="{Binding CurrentSpeed, StringFormat='{0:F0} km/h'}"
+                                           FontAttributes="Bold"/>
+                                </VerticalStackLayout>
+
+                                <VerticalStackLayout Grid.Column="1" Spacing="2">
+                                    <Label Text="Distance" Style="{StaticResource MetaLabelStyle}"/>
+                                    <Label Text="{Binding DistanceTraveled, StringFormat='{0:F1} km'}"
+                                           FontAttributes="Bold"/>
+                                </VerticalStackLayout>
+
+                                <VerticalStackLayout Grid.Column="2" Spacing="2" HorizontalOptions="End">
+                                    <Label Text="Alerts" Style="{StaticResource MetaLabelStyle}" HorizontalOptions="End"/>
+                                    <Label Text="{Binding AlertsCount, StringFormat='{0}'}"
+                                           FontAttributes="Bold"
+                                           HorizontalOptions="End">
+                                        <Label.Triggers>
+                                            <DataTrigger TargetType="Label" Binding="{Binding AlertsCount}" Value="0">
+                                                <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource Gray700}, Dark={StaticResource Gray200}}"/>
+                                            </DataTrigger>
+                                        </Label.Triggers>
+                                    </Label>
+                                </VerticalStackLayout>
+                            </Grid>
+
+                            <!-- Footer meta -->
+                            <Grid Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2"
+                                  ColumnDefinitions="*,Auto"
+                                  Margin="0,2,0,0">
+                                <Label Grid.Column="0"
+                                       Text="{Binding StartedAt, StringFormat='Started {0:MMM dd · HH:mm}'}"
+                                       Style="{StaticResource MetaLabelStyle}"/>
+                                <Label Grid.Column="1"
+                                       Text="{Binding StopsCompleted, StringFormat='{0} stops'}"
+                                       Style="{StaticResource MetaLabelStyle}"
+                                       HorizontalOptions="End"/>
+                            </Grid>
                         </Grid>
                     </Border>
                 </DataTemplate>

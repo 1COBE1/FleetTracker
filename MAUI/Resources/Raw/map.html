@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
@@ -11,6 +11,49 @@
             height: 100%;
             margin: 0;
             padding: 0;
+        }
+
+        :root {
+            --primary: #0B6EF3;
+            --primary-dark: #084EB0;
+            --surface: rgba(255, 255, 255, 0.92);
+            --text: #101828;
+            --muted: #667085;
+            --border: rgba(16, 24, 40, 0.10);
+        }
+
+        .leaflet-control-attribution {
+            font-size: 10px;
+            color: var(--muted);
+        }
+
+        .ft-legend {
+            background: var(--surface);
+            color: var(--text);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 8px 10px;
+            box-shadow: 0 10px 28px rgba(16, 24, 40, 0.15);
+            font-family: -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+        }
+        .ft-legend .title {
+            font-size: 11px;
+            font-weight: 700;
+            margin: 0 0 6px 0;
+        }
+        .ft-legend .row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 11px;
+            margin: 4px 0;
+        }
+        .ft-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 999px;
+            background: var(--primary);
+            box-shadow: 0 0 0 2px #fff, 0 6px 16px rgba(16, 24, 40, 0.25);
         }
     </style>
 </head>
@@ -25,6 +68,28 @@
 
         var vehicles = {};
 
+        // Lightweight legend (bottom-left)
+        var legend = L.control({ position: 'bottomleft' });
+        legend.onAdd = function () {
+            var div = L.DomUtil.create('div', 'ft-legend');
+            div.innerHTML =
+                '<div class="title">Live Fleet</div>' +
+                '<div class="row"><span class="ft-dot"></span><span>Vehicle</span></div>';
+            return div;
+        };
+        legend.addTo(map);
+
+        function vehicleIconHtml() {
+            return '<div style="background:var(--primary);width:14px;height:14px;border-radius:50%;border:3px solid #fff;box-shadow:0 10px 22px rgba(16,24,40,0.25)"></div>';
+        }
+
+        var vehicleIcon = L.divIcon({
+            className: '',
+            html: vehicleIconHtml(),
+            iconSize: [14, 14],
+            iconAnchor: [7, 7]
+        });
+
         function updateVehicle(id, lat, lng, name, speed) {
             if (vehicles[id]) {
                 vehicles[id].marker.setLatLng([lat, lng]);
@@ -32,7 +97,7 @@
                     '<b>' + name + '</b><br>Speed: ' + speed.toFixed(1) + ' km/h'
                 );
             } else {
-                var marker = L.marker([lat, lng]).addTo(map);
+                var marker = L.marker([lat, lng], { icon: vehicleIcon }).addTo(map);
                 marker.bindPopup('<b>' + name + '</b><br>Speed: ' + speed.toFixed(1) + ' km/h');
                 vehicles[id] = { marker: marker };
             }

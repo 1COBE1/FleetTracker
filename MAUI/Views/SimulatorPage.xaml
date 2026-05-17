@@ -13,33 +13,44 @@
                  Source="map.html"/>
 
         <ScrollView Grid.Row="1">
-            <VerticalStackLayout Padding="16" Spacing="16">
+            <VerticalStackLayout Padding="0,16" Spacing="16">
 
-                <Label Text="Active Trip" FontAttributes="Bold"/>
-                <Picker ItemsSource="{Binding ActiveTrips}"
-                        SelectedItem="{Binding SelectedTrip}"
-                        ItemDisplayBinding="{Binding VehicleName}"
-                        Title="Select a trip"/>
+                <Label Text="Active trip" Style="{StaticResource SectionHeaderLabelStyle}" FontSize="14"/>
+                <Border Style="{StaticResource FieldContainerStyle}">
+                    <Picker ItemsSource="{Binding ActiveTrips}"
+                            SelectedItem="{Binding SelectedTrip}"
+                            ItemDisplayBinding="{Binding VehicleName}"
+                            Title="Select a trip"/>
+                </Border>
 
                 <Button Text="Load Stops"
                         Command="{Binding InitializeCommand}"
+                        Style="{StaticResource SecondaryButtonStyle}"
                         IsEnabled="{Binding IsNotRunning}"/>
 
-                <Label Text="{Binding SpeedMultiplier, StringFormat='Speed Multiplier: {0}x'}"
-                       FontAttributes="Bold"/>
+                <Label Text="{Binding SpeedMultiplier, StringFormat='Speed multiplier: {0}x'}"
+                       Style="{StaticResource SectionHeaderLabelStyle}"
+                       FontSize="14"/>
                 <Slider Minimum="1" Maximum="20"
                         Value="{Binding SpeedMultiplier}"
                         IsEnabled="{Binding IsNotRunning}"/>
 
-                <Border Padding="12" StrokeShape="RoundRectangle 8" BackgroundColor="#F5F5F5">
+                <Border Style="{StaticResource CardStyle}" Padding="14">
                     <VerticalStackLayout Spacing="6">
-                        <Label Text="{Binding StatusText}" FontAttributes="Bold"/>
-                        <Label Text="{Binding CurrentLatitude,  StringFormat='Lat: {0:F6}'}" FontSize="12" TextColor="Gray"/>
-                        <Label Text="{Binding CurrentLongitude, StringFormat='Lng: {0:F6}'}" FontSize="12" TextColor="Gray"/>
+                        <Label Text="{Binding StatusText}" Style="{StaticResource CardTitleLabelStyle}" FontSize="14"/>
+                        <Grid ColumnDefinitions="*,*" ColumnSpacing="12">
+                            <Label Grid.Column="0"
+                                   Text="{Binding CurrentLatitude,  StringFormat='Lat {0:F6}'}"
+                                   Style="{StaticResource MetaLabelStyle}"/>
+                            <Label Grid.Column="1"
+                                   Text="{Binding CurrentLongitude, StringFormat='Lng {0:F6}'}"
+                                   Style="{StaticResource MetaLabelStyle}"
+                                   HorizontalOptions="End"/>
+                        </Grid>
                         <ProgressBar Progress="{Binding WaypointRatio}"/>
 
                         <Label Text="{Binding WaypointProgress, StringFormat='{0} waypoints sent'}"
-                               FontSize="12" TextColor="Gray"/>
+                               Style="{StaticResource MetaLabelStyle}"/>
                     </VerticalStackLayout>
                 </Border>
 
@@ -48,18 +59,17 @@
                             Text="▶ Start"
                             Command="{Binding StartCommand}"
                             IsEnabled="{Binding IsNotRunning}"
-                            BackgroundColor="Green"
-                            TextColor="White"/>
+                            Style="{StaticResource PrimaryButtonStyle}"/>
                     <Button Grid.Column="1"
                             Text="⏹ Stop"
                             Command="{Binding StopCommand}"
                             IsEnabled="{Binding IsRunning}"
-                            BackgroundColor="Red"
-                            TextColor="White"/>
+                            Style="{StaticResource DestructiveButtonStyle}"/>
                     <Button Grid.Column="2"
                             Text="↺ Reset"
                             Command="{Binding ResetCommand}"
-                            IsEnabled="{Binding IsNotRunning}"/>
+                            IsEnabled="{Binding IsNotRunning}"
+                            Style="{StaticResource SecondaryButtonStyle}"/>
                 </Grid>
 
                 <ActivityIndicator IsRunning="{Binding IsLoading}"

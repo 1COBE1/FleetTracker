@@ -22,54 +22,58 @@
             </CollectionView.EmptyView>
             <CollectionView.ItemTemplate>
                 <DataTemplate x:DataType="models:TripModel">
-                    <Border Margin="12,6" Padding="12" StrokeShape="RoundRectangle 8">
-                        <Grid ColumnDefinitions="*, Auto" RowDefinitions="Auto, Auto, Auto">
+                    <Border Style="{StaticResource CardStyle}" Margin="0,8">
+                        <Grid RowDefinitions="Auto,Auto,Auto" ColumnDefinitions="*,Auto" RowSpacing="8">
 
-                            <!-- Vehicle + driver -->
-                            <Label Grid.Row="0" Grid.Column="0"
-                                   Text="{Binding VehicleName}"
-                                   FontAttributes="Bold"
-                                   FontSize="16"/>
-                            <Label Grid.Row="1" Grid.Column="0"
-                                   Text="{Binding DriverName}"
-                                   FontSize="13"
-                                   TextColor="Gray"/>
-
-                            <!-- Stats -->
-                            <VerticalStackLayout Grid.Row="0" Grid.Column="1"
-                                                 Grid.RowSpan="2"
-                                                 HorizontalOptions="End"
-                                                 Spacing="2">
-                                <Label Text="{Binding DistanceTraveled, StringFormat='{0:F1} km'}"
-                                       FontSize="13"
-                                       HorizontalOptions="End"/>
-                                <Label Text="{Binding StopsCompleted, StringFormat='{0} stops'}"
-                                       FontSize="12"
-                                       TextColor="Gray"
-                                       HorizontalOptions="End"/>
-                                <Label Text="{Binding AlertsCount, StringFormat='{0} alerts'}"
-                                       FontSize="12"
-                                       TextColor="Red"
-                                       HorizontalOptions="End"/>
+                            <VerticalStackLayout Grid.Row="0" Grid.Column="0" Spacing="2">
+                                <Label Text="{Binding VehicleName}"
+                                       Style="{StaticResource CardTitleLabelStyle}"/>
+                                <Label Text="{Binding DriverName}"
+                                       Style="{StaticResource MetaLabelStyle}"/>
                             </VerticalStackLayout>
 
-                            <!-- Date + Replay button -->
+                            <Border Grid.Row="0" Grid.Column="1"
+                                    Style="{StaticResource StatusPillStyle}"
+                                    HorizontalOptions="End"
+                                    BackgroundColor="{StaticResource SuccessBackground}">
+                                <Label Text="{Binding Status}"
+                                       Style="{StaticResource StatusPillLabelStyle}"
+                                       TextColor="{StaticResource Success}"/>
+                            </Border>
+
+                            <Grid Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"
+                                  ColumnDefinitions="*,*,Auto"
+                                  ColumnSpacing="12">
+                                <VerticalStackLayout Grid.Column="0" Spacing="2">
+                                    <Label Text="Distance" Style="{StaticResource MetaLabelStyle}"/>
+                                    <Label Text="{Binding DistanceTraveled, StringFormat='{0:F1} km'}"
+                                           FontAttributes="Bold"/>
+                                </VerticalStackLayout>
+                                <VerticalStackLayout Grid.Column="1" Spacing="2">
+                                    <Label Text="Stops" Style="{StaticResource MetaLabelStyle}"/>
+                                    <Label Text="{Binding StopsCompleted, StringFormat='{0}'}"
+                                           FontAttributes="Bold"/>
+                                </VerticalStackLayout>
+                                <VerticalStackLayout Grid.Column="2" Spacing="2" HorizontalOptions="End">
+                                    <Label Text="Alerts" Style="{StaticResource MetaLabelStyle}" HorizontalOptions="End"/>
+                                    <Label Text="{Binding AlertsCount, StringFormat='{0}'}"
+                                           FontAttributes="Bold"
+                                           HorizontalOptions="End"/>
+                                </VerticalStackLayout>
+                            </Grid>
+
                             <Grid Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2"
-                                  ColumnDefinitions="*, Auto"
-                                  Margin="0,8,0,0">
+                                  ColumnDefinitions="*,Auto"
+                                  Margin="0,2,0,0">
                                 <Label Grid.Column="0"
-                                       Text="{Binding EndedAt, StringFormat='{0:MMM dd, yyyy  HH:mm}'}"
-                                       FontSize="12"
-                                       TextColor="Gray"
+                                       Text="{Binding EndedAt, StringFormat='Ended {0:MMM dd · HH:mm}'}"
+                                       Style="{StaticResource MetaLabelStyle}"
                                        VerticalOptions="Center"/>
                                 <Button Grid.Column="1"
-                                        Text="▶  Replay"
-                                        BackgroundColor="#2196F3"
-                                        TextColor="White"
-                                        FontSize="13"
-                                        HeightRequest="36"
-                                        Padding="12,0"
-                                        CornerRadius="18"
+                                        Text="Replay"
+                                        Style="{StaticResource SecondaryButtonStyle}"
+                                        Padding="14,8"
+                                        CornerRadius="999"
                                         CommandParameter="{Binding TripId}"
                                         Clicked="OnReplayClicked"/>
                             </Grid>
